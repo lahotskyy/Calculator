@@ -12,13 +12,7 @@ export class SimpleModeComponent implements OnInit {
   result: string;
   isEval: boolean;
   isNewNumber: boolean;
-  indexLastOperation: number;
-  resultReverse: string;
   canNewOperation: boolean;
-  isMult: boolean;
-  isDiv: boolean;
-  isPlus: boolean;
-  isSubtr: boolean;
 
   constructor() { }
 
@@ -27,21 +21,17 @@ export class SimpleModeComponent implements OnInit {
     this.isEval = false;
     this.isNewNumber = true;
     this.canNewOperation = false;
-    this.MAX_COUNT_NUMBER = 12;
+    this.MAX_COUNT_NUMBER = 14;
   }
 
   saveResult() {
+    this.result = this.evalNumber();
     localStorage.setItem('result', this.result);
   }
 
   resultFromMemory() {
-    this.isMult = (this.result.slice(-1) === '*');
-    this.isDiv = (this.result.slice(-1) === '/');
-    this.isPlus = (this.result.slice(-1) === '+');
-    this.isSubtr = (this.result.slice(-1) === '-');
- 
     if (this.result.length < this.MAX_COUNT_NUMBER) {
-      if (this.isMult || this.isDiv || this.isPlus || this.isSubtr) {
+      if (this.isLastOperation()) {
         this.result += localStorage.getItem('result');
       } else {
         this.result = localStorage.getItem('result');
@@ -51,15 +41,24 @@ export class SimpleModeComponent implements OnInit {
 
   backSpace() {
     this.result = this.result.substring(0, this.result.length - 1);
-    this.canNewOperation = true;
+    if (this.result.slice(-1) !== '.') {
+      this.canNewOperation = true;
+    } else {
+      this.canNewOperation = false;
+    }
+    this.isEval = false;
 
     return this.result;
   }
 
   buttonCE() {
-    this.resultReverse = this.result.split("").reverse().join("");
-    this.indexLastOperation = this.resultReverse.match(/[\/\*\-\+]/).index;
-    this.result = this.result.substring(0, this.result.length - this.indexLastOperation);
+    if (this.result.match(/[\/\*\-\+]/)) {
+      const resultReverse = this.result.split("").reverse().join("");
+      const indexLastOperation = resultReverse.match(/[\/\*\-\+]/).index;
+      this.result = this.result.substring(0, this.result.length - indexLastOperation);
+    } else {
+      this.result = '0';
+    }
 
     this.canNewOperation = false;
     this.isNewNumber = true;
@@ -84,7 +83,6 @@ export class SimpleModeComponent implements OnInit {
 
       this.isEval = false;
       this.canNewOperation = true;
-      this.isNewNumber = false;
 
       return this.result;
     }
@@ -120,11 +118,28 @@ export class SimpleModeComponent implements OnInit {
   }
 
   evalNumber() {
+    if (this.isLastOperation()) {
+      this.result = this.result.substring(0, this.result.length - 1);
+    }
+
     this.result = String(+Number(eval(this.result)).toFixed(10));
     this.isEval = true;
     this.canNewOperation = true;
 
     return this.result;
+  }
+
+  // Check if the operation is the last character (for evalNumber and resultFromMemory functions)
+  isLastOperation() {
+    const isMult = (this.result.slice(-1) === '*');
+    const isDiv = (this.result.slice(-1) === '/');
+    const isPlus = (this.result.slice(-1) === '+');
+    const isSubtr = (this.result.slice(-1) === '-');
+    if (isMult || isDiv || isPlus || isSubtr) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }
