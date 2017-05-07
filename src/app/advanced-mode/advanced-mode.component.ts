@@ -12,13 +12,7 @@ export class AdvancedModeComponent implements OnInit {
   result: string;
   isEval: boolean;
   isNewNumber: boolean;
-  indexLastOperation: number;
-  resultReverse: string;
   canNewOperation: boolean;
-  isMult: boolean;
-  isDiv: boolean;
-  isPlus: boolean;
-  isSubtr: boolean;
 
   constructor() { }
 
@@ -47,15 +41,24 @@ export class AdvancedModeComponent implements OnInit {
 
   backSpace() {
     this.result = this.result.substring(0, this.result.length - 1);
-    this.canNewOperation = true;
+    if (this.result.slice(-1) !== '.') {
+      this.canNewOperation = true;
+    } else {
+      this.canNewOperation = false;
+    }
+    this.isEval = false;
 
     return this.result;
   }
 
   buttonCE() {
-    this.resultReverse = this.result.split("").reverse().join("");
-    this.indexLastOperation = this.resultReverse.match(/[\/\*\-\+]/).index;
-    this.result = this.result.substring(0, this.result.length - this.indexLastOperation);
+    if (this.result.match(/[\/\*\-\+]/)) {
+      const resultReverse = this.result.split("").reverse().join("");
+      const indexLastOperation = resultReverse.match(/[\/\*\-\+]/).index;
+      this.result = this.result.substring(0, this.result.length - indexLastOperation);
+    } else {
+      this.result = '0';
+    }
 
     this.canNewOperation = false;
     this.isNewNumber = true;
@@ -77,7 +80,7 @@ export class AdvancedModeComponent implements OnInit {
   }
 
   evalFactorial() {
-    let resultN: number = Number(this.evalNumber());
+    const resultN: number = Number(this.evalNumber());
     if (resultN > 20) {
        alert('Attention! You input too big number! Number must be less than 20.');
      } else if (resultN < 0) {
@@ -126,7 +129,6 @@ export class AdvancedModeComponent implements OnInit {
 
       this.isEval = false;
       this.canNewOperation = true;
-      this.isNewNumber = false;
 
       return this.result;
     }
@@ -175,11 +177,11 @@ export class AdvancedModeComponent implements OnInit {
 
   // Check if the operation is the last character (for evalNumber and resultFromMemory functions)
   isLastOperation() {
-    this.isMult = (this.result.slice(-1) === '*');
-    this.isDiv = (this.result.slice(-1) === '/');
-    this.isPlus = (this.result.slice(-1) === '+');
-    this.isSubtr = (this.result.slice(-1) === '-');
-    if (this.isMult || this.isDiv || this.isPlus || this.isSubtr) {
+    const isMult = (this.result.slice(-1) === '*');
+    const isDiv = (this.result.slice(-1) === '/');
+    const isPlus = (this.result.slice(-1) === '+');
+    const isSubtr = (this.result.slice(-1) === '-');
+    if (isMult || isDiv || isPlus || isSubtr) {
       return true;
     } else {
       return false;
@@ -188,11 +190,10 @@ export class AdvancedModeComponent implements OnInit {
 
   factorial(num) {
     if (num === 0 || num < 0) {
-      return 1; 
-    } else { 
-      return num * this.factorial( num - 1 ); 
+      return 1;
+    } else {
+      return num * this.factorial( num - 1 );
     }
   }
-
 
 }
