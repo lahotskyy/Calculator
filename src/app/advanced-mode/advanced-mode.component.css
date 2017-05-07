@@ -1,6 +1,6 @@
 form {
     border: 2px solid black;
-    width: 204px;
+    width: 252px;
     height: auto;
     padding: 5px;
     margin-left: 10%;
@@ -16,10 +16,17 @@ form {
     width: 40px;
     height:40px;
     margin: 4px 2px;
+    padding: 0px 0px;
 }
 
 .double {
     width: 88px;
+    height:40px;
+    margin: 4px 2px;
+}
+
+.double-plus {
+    width: 112px;
     height:40px;
     margin: 4px 2px;
 }
