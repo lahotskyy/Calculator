@@ -15,6 +15,10 @@ export class SimpleModeComponent implements OnInit {
   indexLastOperation: number;
   resultReverse: string;
   canNewOperation: boolean;
+  isMult: boolean;
+  isDiv: boolean;
+  isPlus: boolean;
+  isSubtr: boolean;
 
   constructor() { }
 
@@ -31,7 +35,18 @@ export class SimpleModeComponent implements OnInit {
   }
 
   resultFromMemory() {
-    this.result += localStorage.getItem('result');
+    this.isMult = (this.result.slice(-1) === '*');
+    this.isDiv = (this.result.slice(-1) === '/');
+    this.isPlus = (this.result.slice(-1) === '+');
+    this.isSubtr = (this.result.slice(-1) === '-');
+ 
+    if (this.result.length < this.MAX_COUNT_NUMBER) {
+      if (this.isMult || this.isDiv || this.isPlus || this.isSubtr) {
+        this.result += localStorage.getItem('result');
+      } else {
+        this.result = localStorage.getItem('result');
+      }
+    }
   }
 
   backSpace() {
