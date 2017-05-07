@@ -2,15 +2,18 @@
 Advanced Calculator Tool
 
 The calculator has two modes: simple and advanced. 
+
 In simple mode implemented four operations: 
   - addition, 
   - subtraction,
   - multiplication,
   - division. 
+
 In Advanced mode also implemented other operations: 
   - factorial, 
   - squaring, 
   - trigonometric operations (sin, cos, tan).
+
 It is also possible:
   - to store the number in a local store and output it, 
   - to wipe one symbol, number or entire result.
